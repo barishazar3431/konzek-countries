@@ -1,5 +1,8 @@
 import { useQuery } from '@apollo/client';
 import { gql } from './__generated__';
+import CountriesList from './components/CountriesList';
+import { useEffect, useState } from 'react';
+import CountriesFilter from './components/CountriesFilter';
 
 const GET_COUNTRIES = gql(`
   query GetCountries {
@@ -22,13 +25,24 @@ const GET_COUNTRIES = gql(`
 `);
 
 function App() {
-  const {data } = useQuery(GET_COUNTRIES);
+  const { data } = useQuery(GET_COUNTRIES);
+  const [filteredData, setFilteredData] = useState<typeof data>();
 
- 
+  useEffect(() => {
+    setFilteredData(data);
+    console.log(data?.countries[0]);
+  }, [data]);
 
-  console.log(data?.countries[23]);
+  const handleFilter = (filterPrompt: string) => {
+    console.log(filterPrompt);
+  };
 
-  return <p>Hello</p>;
+  return (
+    <>
+      <CountriesFilter handleFilter={handleFilter} />
+      <CountriesList data={filteredData} />
+    </>
+  );
 }
 
 export default App;
