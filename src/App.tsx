@@ -3,6 +3,7 @@ import { gql } from './__generated__';
 import CountriesList from './components/CountriesList';
 import { useEffect, useState } from 'react';
 import CountriesFilter from './components/CountriesFilter';
+import { GetCountriesQuery } from './__generated__/graphql';
 
 const GET_COUNTRIES = gql(`
   query GetCountries {
@@ -26,15 +27,43 @@ const GET_COUNTRIES = gql(`
 
 function App() {
   const { data } = useQuery(GET_COUNTRIES);
-  const [filteredData, setFilteredData] = useState<typeof data>();
+  const [filteredData, setFilteredData] = useState<GetCountriesQuery>();
+
 
   useEffect(() => {
     setFilteredData(data);
-    console.log(data?.countries[0]);
   }, [data]);
 
   const handleFilter = (filterPrompt: string) => {
-    console.log(filterPrompt);
+    if (!data) return;
+
+    const {search} = parseFilterPrompt(filterPrompt);
+
+    const filteredCountries = data.countries.filter((country) =>
+      country.name.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredData({ countries: filteredCountries });
+  };
+
+  const parseFilterPrompt = (prompt: string) => {
+    const regex = /(search|group)+:(\w+)/g;
+
+    let match;
+    const result = {
+      search: '',
+      group: '',
+    };
+
+    while ((match = regex.exec(prompt)) !== null) {
+      const [, key, value] = match;
+      if (key === 'search') {
+        result.search = value; 
+      }
+      if (key === 'group') {
+        result.group = value;
+      }
+    }
+    return result;
   };
 
   return (
