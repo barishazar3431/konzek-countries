@@ -1,7 +1,3 @@
-const colors = [
-  'yellow',
-  'blue',
-  'gray'
-];
+const colors = ['darkred', 'darkblue', 'green'];
 
 export default colors;

@@ -1,0 +1,32 @@
+.form {
+  margin-top: 5rem;
+  display: flex;
+  justify-content: center;
+  max-width: 30rem;
+  margin-inline: auto;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.input {
+  padding: 0.5rem 1rem;
+  width: 100%;
+  outline: none;
+  border: none;
+  background-color: rgb(47, 46, 53);
+  color: rgb(182, 182, 182);
+}
+
+.submitBtn {
+  background-color: #12506d;
+  border: none;
+  color: white;
+  display: block;
+  cursor: pointer;
+  padding: 1rem;
+  transition: background-color 0.15s;
+}
+
+.submitBtn:hover {
+  background-color: #0f4c68;
+}

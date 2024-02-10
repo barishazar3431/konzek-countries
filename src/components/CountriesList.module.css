@@ -1,0 +1,66 @@
+.loadingText {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.errorText {
+  font-size: 2rem;
+  text-align: center;
+  color: red;
+}
+
+.container {
+  margin-top: 3rem;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  color: rgb(199, 199, 199);
+}
+
+.item {
+  background-color: rgb(0, 0, 100);
+  flex: 0 1 22rem;
+  max-width: 22rem;
+  display: flex;
+  align-items: start;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+}
+
+.item:hover {
+  border: 1px solid white;
+}
+
+.flag {
+  font-size: 4rem;
+  position: relative;
+  top: -0.4rem;
+}
+
+.countryName {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+.countryInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-wrap: wrap;
+}

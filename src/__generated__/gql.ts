@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query GetCountries {\n    countries {\n      code\n      name\n      native\n      phone\n      continent {\n        code\n      }\n      currency\n      languages {\n        name\n      }\n      emoji\n      emojiU\n    }\n  }\n": types.GetCountriesDocument,
+    "\n  query GetCountries {\n    countries {\n      code\n      name\n      native\n      phone\n      continent {\n        code\n        name\n      }\n      currency\n      languages {\n        name\n      }\n      emoji\n      emojiU\n    }\n  }\n": types.GetCountriesDocument,
 };
 
 /**
@@ -33,7 +33,7 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query GetCountries {\n    countries {\n      code\n      name\n      native\n      phone\n      continent {\n        code\n      }\n      currency\n      languages {\n        name\n      }\n      emoji\n      emojiU\n    }\n  }\n"): (typeof documents)["\n  query GetCountries {\n    countries {\n      code\n      name\n      native\n      phone\n      continent {\n        code\n      }\n      currency\n      languages {\n        name\n      }\n      emoji\n      emojiU\n    }\n  }\n"];
+export function gql(source: "\n  query GetCountries {\n    countries {\n      code\n      name\n      native\n      phone\n      continent {\n        code\n        name\n      }\n      currency\n      languages {\n        name\n      }\n      emoji\n      emojiU\n    }\n  }\n"): (typeof documents)["\n  query GetCountries {\n    countries {\n      code\n      name\n      native\n      phone\n      continent {\n        code\n        name\n      }\n      currency\n      languages {\n        name\n      }\n      emoji\n      emojiU\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

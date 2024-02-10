@@ -1,3 +1,5 @@
+import styles from './CountriesFilter.module.css';
+
 type Props = {
   handleFilter: (e: string) => void;
 };
@@ -15,9 +17,16 @@ export default function CountriesFilter({ handleFilter }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input ref={inputRef} type="text" placeholder="Filter the results" />
-      <button type="submit">Filter</button>
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <input
+        className={styles.input}
+        ref={inputRef}
+        type="text"
+        placeholder="Ex: search:tu group:continent"
+      />
+      <button className={styles.submitBtn} type="submit">
+        Filter
+      </button>
     </form>
   );
 }

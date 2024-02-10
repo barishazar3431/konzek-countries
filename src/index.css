@@ -107,18 +107,14 @@ ol,
 ul {
   list-style: none;
 }
-blockquote,
-q {
-  quotes: none;
+
+body {
+  background-color: #040c18;
+  color: white;
 }
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: '';
-  content: none;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
+
+.container {
+  max-width: 1200px;
+  width: calc(100% - 3rem);
+  margin-inline: auto;
 }

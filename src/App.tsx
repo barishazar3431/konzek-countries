@@ -14,6 +14,7 @@ const GET_COUNTRIES = gql(`
       phone
       continent {
         code
+        name
       }
       currency
       languages {
@@ -26,9 +27,8 @@ const GET_COUNTRIES = gql(`
 `);
 
 function App() {
-  const { data } = useQuery(GET_COUNTRIES);
+  const { data, loading, error } = useQuery(GET_COUNTRIES);
   const [filteredData, setFilteredData] = useState<GetCountriesQuery>();
-
 
   useEffect(() => {
     setFilteredData(data);
@@ -37,16 +37,25 @@ function App() {
   const handleFilter = (filterPrompt: string) => {
     if (!data) return;
 
-    const {search} = parseFilterPrompt(filterPrompt);
+    const { search } = parseFilterPrompt(filterPrompt);
 
-    const filteredCountries = data.countries.filter((country) =>
-      country.name.toLowerCase().includes(search.toLowerCase())
+    const filteredCountries = data.countries.filter(
+      (country) =>
+        country.name.toLowerCase().includes(search.toLowerCase()) ||
+        country.continent.name.toLowerCase().includes(search.toLowerCase()) ||
+        country.native.toLowerCase().includes(search.toLowerCase()) ||
+        country.phone.toLowerCase().includes(search.toLowerCase()) ||
+        country.languages.some((language) =>
+          language.name.toLowerCase().includes(search.toLowerCase())
+        ) ||
+        (country.currency &&
+          country.currency.toLowerCase().includes(search.toLowerCase()))
     );
     setFilteredData({ countries: filteredCountries });
   };
 
   const parseFilterPrompt = (prompt: string) => {
-    const regex = /(search|group)+:(\w+)/g;
+    const regex = /(search|group)+:(\w+)/gi;
 
     let match;
     const result = {
@@ -56,10 +65,10 @@ function App() {
 
     while ((match = regex.exec(prompt)) !== null) {
       const [, key, value] = match;
-      if (key === 'search') {
-        result.search = value; 
+      if (key.toLowerCase() === 'search') {
+        result.search = value;
       }
-      if (key === 'group') {
+      if (key.toLowerCase() === 'group') {
         result.group = value;
       }
     }
@@ -67,10 +76,14 @@ function App() {
   };
 
   return (
-    <>
+    <div className="container">
       <CountriesFilter handleFilter={handleFilter} />
-      <CountriesList data={filteredData} />
-    </>
+      <CountriesList
+        data={filteredData || { countries: [] }}
+        loading={loading}
+        error={error}
+      />
+    </div>
   );
 }
 
