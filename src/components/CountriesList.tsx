@@ -24,11 +24,11 @@ export default function CountriesList({ data, loading, error }: Props) {
   const listItemClickHandler = (event: SyntheticEvent) => {
     const newSelectedIndex = event.currentTarget.getAttribute('data-index');
     if (!newSelectedIndex) return;
+    
     setSelectedIndex(Number(newSelectedIndex));
     setSelectedColorIndex((selectedColorIndex + 1) % colors.length);
   };
 
- 
   return (
     <div className={styles.container}>
       {loading && <p className={styles.loadingText}>Loading...</p>}
@@ -46,6 +46,7 @@ export default function CountriesList({ data, loading, error }: Props) {
             }
             onClick={listItemClickHandler}
           >
+            <span className={styles.itemCounter}>{index + 1}</span>
             <span className={styles.flag}>{country.emoji}</span>
             <div className={styles.details}>
               <p className={styles.countryName}>{country.name}</p>

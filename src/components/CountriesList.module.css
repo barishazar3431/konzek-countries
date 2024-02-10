@@ -22,7 +22,7 @@
 }
 
 .item {
-  background-color: rgb(0, 0, 100);
+  background-color: rgb(8, 8, 83);
   flex: 0 1 22rem;
   max-width: 22rem;
   display: flex;
@@ -33,10 +33,17 @@
   cursor: pointer;
   border: 1px solid transparent;
   transition: all 0.15s;
+  position: relative;
 }
 
 .item:hover {
   border: 1px solid white;
+}
+
+.itemCounter {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
 }
 
 .flag {
