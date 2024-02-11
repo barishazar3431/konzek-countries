@@ -1,0 +1,15 @@
+.loadingText {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.errorText {
+  font-size: 2rem;
+  text-align: center;
+  color: red;
+  margin-bottom: 2rem;
+}
+
+.mainContainer {
+  margin-top: 3rem;
+}
