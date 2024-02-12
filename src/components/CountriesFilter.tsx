@@ -22,7 +22,7 @@ export default function CountriesFilter({ handleFilter }: Props) {
         className={styles.input}
         ref={inputRef}
         type="text"
-        placeholder="Ex: search:tu group:continent"
+        placeholder="E.g. search:tt group:continent"
       />
       <button className={styles.submitBtn} type="submit">
         Filter
