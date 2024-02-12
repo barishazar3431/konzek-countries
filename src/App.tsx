@@ -62,6 +62,7 @@ function App() {
       setFilterError(
         'Please use the supported format: E.g search:tu group:continent'
       );
+      setFilteredAndGroupedData({ 'All Countries': data.countries });
       return;
     }
 

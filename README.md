@@ -10,6 +10,4 @@ npm install
 npm start
 ```
 
-And then, visit http://localhost:5173/.
-
-Note: If you enter no input, it will reset and show all the countries.
+And then, visit http://localhost:5173/. (Sometimes it uses the port 5174, so check your terminal for it)
