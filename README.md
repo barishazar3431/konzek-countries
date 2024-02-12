@@ -10,6 +10,6 @@ npm install
 npm start
 ```
 
-And then, visit http://localhost:5174/.
+And then, visit http://localhost:5173/.
 
 Note: If you enter no input, it will reset and show all the countries.
