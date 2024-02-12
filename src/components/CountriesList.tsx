@@ -2,11 +2,10 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import styles from './CountriesList.module.css';
 import colors from '../utils/colors';
 import CountriesListItem from './CountriesListItem';
-import { Country } from '../App';
+import { GroupedData } from '../App';
 
 type Props = {
-  data: Country[] | undefined;
-  groupByTerm?: string;
+  data: GroupedData | undefined;
 };
 
 export default function CountriesList({ data }: Props) {
@@ -15,33 +14,73 @@ export default function CountriesList({ data }: Props) {
 
   useEffect(() => {
     if (data) {
-      setSelectedItemIndex(data.length < 10 ? data.length - 1 : 9);
+      setSelectedItemIndex(
+        calculateGroupedLength(data) < 10 ? calculateGroupedLength(data) - 1 : 9
+      );
     }
   }, [data]);
 
-  const listItemClickHandler = (event: SyntheticEvent) => {
-    const newSelectedIndex = event.currentTarget.getAttribute('data-index');
-    if (!newSelectedIndex) return;
+  const calculateGroupedLength = (obj: GroupedData) => {
+    let length = 0;
+    for (const key in obj) {
+      length += obj[key].length;
+    }
+    return length;
+  };
 
-    setSelectedItemIndex(Number(newSelectedIndex));
+  const listItemClickHandler = (event: SyntheticEvent) => {
+    const newSelectedIndex = Number(
+      event.currentTarget.getAttribute('data-index')
+    );
+    if (newSelectedIndex === undefined) return;
+
+    if (newSelectedIndex === selectedItemIndex) {
+      setSelectedItemIndex(-1);
+    } else {
+      setSelectedItemIndex(newSelectedIndex);
+    }
+
     setSelectedColorIndex((selectedColorIndex + 1) % colors.length);
   };
 
+  let count = 0;
+
   return (
-    <ul className={styles.list}>
-      {data?.map((country, index) => (
-        <CountriesListItem
-          key={index}
-          country={country}
-          index={index}
-          handleClick={listItemClickHandler}
-          style={
-            selectedItemIndex === index
-              ? { background: colors[selectedColorIndex] || 'darkblue' }
-              : {}
-          }
-        />
-      ))}
-    </ul>
+    <div>
+      {data &&
+        Object.entries(data).map(([key, list]) => {
+          const groupItemCount = list.length;
+          const groupStartIndex = count;
+          count += groupItemCount;
+          return (
+            <>
+              <p className={styles.listHeader}>
+                {key} ({list.length} country)
+              </p>
+              <ul className={styles.list}>
+                {list.map((country, index) => {
+                  const cumulativeIndex = groupStartIndex + index;
+                  return (
+                    <CountriesListItem
+                      key={cumulativeIndex}
+                      country={country}
+                      index={cumulativeIndex}
+                      handleClick={listItemClickHandler}
+                      style={
+                        selectedItemIndex === cumulativeIndex
+                          ? {
+                              background:
+                                colors[selectedColorIndex] || 'darkblue',
+                            }
+                          : {}
+                      }
+                    />
+                  );
+                })}
+              </ul>
+            </>
+          );
+        })}
+    </div>
   );
 }

@@ -32,15 +32,19 @@ export type GroupedData = {
   [key: string]: Country[];
 };
 
-type StringKeys = 'code' | 'name' | 'native' | 'phone' | 'currency' | 'emoji';
+type StringValuedKey = 'code' | 'name' | 'native' | 'phone' | 'currency' | 'emoji';
 
 function App() {
   const { data, loading, error: apolloError } = useQuery(GET_COUNTRIES);
-  const [filteredData, setFilteredData] = useState<Country[]>();
+  const [filteredAndGroupedData, setFilteredAndGroupedData] =
+    useState<GroupedData>();
   const [filterError, setFilterError] = useState('');
 
   useEffect(() => {
-    setFilteredData(data?.countries);
+    if (!data) {
+      return;
+    }
+    setFilteredAndGroupedData({ 'All Countries': data?.countries });
   }, [data]);
 
   const handleFilter = (filterPrompt: string) => {
@@ -49,23 +53,21 @@ function App() {
     setFilterError('');
     const { search, group } = parseFilterPrompt(filterPrompt);
     if (!search && !group) {
-      setFilterError(
-        `The input "${filterPrompt}" is wrong. Correct format is "search:abc group:xyz"`
-      );
+      setFilteredAndGroupedData({ 'All Countries': data.countries });
       return;
     }
 
     if (group && !(group in data.countries[0])) {
       setFilterError(
-        `The attribute "${group}" does not exist on country object!`
+        `The attribute "${group}" is not present in the country object!`
       );
       return;
     }
 
-    filterCountries(search, group);
+    filterAndGroupCountries(search, group);
   };
 
-  const filterCountries = (searchTerm: string, groupBy: string) => {
+  const filterAndGroupCountries = (searchTerm: string, groupBy: string) => {
     const filtered = data?.countries.filter(
       (country) =>
         country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -80,32 +82,40 @@ function App() {
         (country.currency &&
           country.currency.toLowerCase().includes(searchTerm.toLowerCase()))
     );
-
     if (!filtered) return;
 
+    groupCountries(filtered, groupBy);
+  };
+
+  const groupCountries = (filtered: Country[], groupBy: string) => {
+    if (!groupBy) {
+      setFilteredAndGroupedData({ Countries: filtered });
+      return;
+    }
+
     const groupedData = filtered.reduce((acc, country) => {
-      if (typeof country[groupBy as keyof Country] === 'string') {
-        const group = acc[country[groupBy as StringKeys] || 'None'] || [];
+      if (
+        typeof country[groupBy as keyof Country] === 'string' ||
+        groupBy === 'currency'
+      ) {
+        const group = acc[country[groupBy as StringValuedKey] || 'None'] || [];
         group.push(country);
-        acc[country[groupBy as StringKeys] || 'None'] = group;
-      } else if (groupBy === 'continent') {
+        acc[country[groupBy as StringValuedKey] || 'None'] = group;
+      } else if (groupBy === 'continent') { //continent is an object
         const group = acc[country[groupBy].name] || [];
         group.push(country);
-        acc[country[groupBy].name || 'None'] = group;
+        acc[country[groupBy].name] = group;
+      } else if (groupBy === 'languages') { //languages is an array
+        const languageString =
+          country.languages.map((language) => `${language.name}`).toString() ||
+          'None';
+        const group = acc[languageString] || [];
+        group.push(country);
+        acc[languageString] = group;
       }
       return acc;
     }, {} as GroupedData);
-    console.log(groupedData);
-    calculateLength(groupedData);
-    setFilteredData(filtered);
-  };
-
-  const calculateLength = (obj: GroupedData) => {
-    let length = 0;
-    for (const key in obj) {
-      length += obj[key].length;
-    }
-    console.log(length);
+    setFilteredAndGroupedData(groupedData);
   };
 
   const parseFilterPrompt = (prompt: string) => {
@@ -138,7 +148,7 @@ function App() {
           <p className={styles.errorText}>{apolloError.message}</p>
         )}
         {filterError && <p className={styles.errorText}>{filterError}</p>}
-        <CountriesList data={filteredData} />
+        <CountriesList data={filteredAndGroupedData} />
       </main>
     </div>
   );
