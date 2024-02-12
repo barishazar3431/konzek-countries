@@ -32,7 +32,13 @@ export type GroupedData = {
   [key: string]: Country[];
 };
 
-type StringValuedKey = 'code' | 'name' | 'native' | 'phone' | 'currency' | 'emoji';
+type StringValuedKey =
+  | 'code'
+  | 'name'
+  | 'native'
+  | 'phone'
+  | 'currency'
+  | 'emoji';
 
 function App() {
   const { data, loading, error: apolloError } = useQuery(GET_COUNTRIES);
@@ -53,7 +59,9 @@ function App() {
     setFilterError('');
     const { search, group } = parseFilterPrompt(filterPrompt);
     if (!search && !group) {
-      setFilteredAndGroupedData({ 'All Countries': data.countries });
+      setFilterError(
+        'Please use the supported format: E.g search:tu group:continent'
+      );
       return;
     }
 
@@ -101,11 +109,13 @@ function App() {
         const group = acc[country[groupBy as StringValuedKey] || 'None'] || [];
         group.push(country);
         acc[country[groupBy as StringValuedKey] || 'None'] = group;
-      } else if (groupBy === 'continent') { //continent is an object
+      } else if (groupBy === 'continent') {
+        //continent is an object
         const group = acc[country[groupBy].name] || [];
         group.push(country);
         acc[country[groupBy].name] = group;
-      } else if (groupBy === 'languages') { //languages is an array
+      } else if (groupBy === 'languages') {
+        //languages is an array
         const languageString =
           country.languages.map((language) => `${language.name}`).toString() ||
           'None';
