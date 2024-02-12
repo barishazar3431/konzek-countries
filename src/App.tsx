@@ -28,11 +28,16 @@ const GET_COUNTRIES = gql(`
 
 export type Country = GetCountriesQuery['countries'][number];
 
+export type GroupedData = {
+  [key: string]: Country[];
+};
+
+type StringKeys = 'code' | 'name' | 'native' | 'phone' | 'currency' | 'emoji';
+
 function App() {
   const { data, loading, error: apolloError } = useQuery(GET_COUNTRIES);
   const [filteredData, setFilteredData] = useState<Country[]>();
   const [filterError, setFilterError] = useState('');
-  const [groupByTerm, setGroupByTerm] = useState('');
 
   useEffect(() => {
     setFilteredData(data?.countries);
@@ -57,12 +62,11 @@ function App() {
       return;
     }
 
-    filterCountries(search);
-    setGroupByTerm(group);
+    filterCountries(search, group);
   };
 
-  const filterCountries = (searchTerm: string) => {
-    const filtered =  data?.countries.filter(
+  const filterCountries = (searchTerm: string, groupBy: string) => {
+    const filtered = data?.countries.filter(
       (country) =>
         country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         country.continent.name
@@ -76,10 +80,34 @@ function App() {
         (country.currency &&
           country.currency.toLowerCase().includes(searchTerm.toLowerCase()))
     );
+
+    if (!filtered) return;
+
+    const groupedData = filtered.reduce((acc, country) => {
+      if (typeof country[groupBy as keyof Country] === 'string') {
+        const group = acc[country[groupBy as StringKeys] || 'None'] || [];
+        group.push(country);
+        acc[country[groupBy as StringKeys] || 'None'] = group;
+      } else if (groupBy === 'continent') {
+        const group = acc[country[groupBy].name] || [];
+        group.push(country);
+        acc[country[groupBy].name || 'None'] = group;
+      }
+      return acc;
+    }, {} as GroupedData);
+    console.log(groupedData);
+    calculateLength(groupedData);
     setFilteredData(filtered);
   };
 
-  
+  const calculateLength = (obj: GroupedData) => {
+    let length = 0;
+    for (const key in obj) {
+      length += obj[key].length;
+    }
+    console.log(length);
+  };
+
   const parseFilterPrompt = (prompt: string) => {
     const regex = /(search|group)+:(\w+)/gi;
 
@@ -110,7 +138,7 @@ function App() {
           <p className={styles.errorText}>{apolloError.message}</p>
         )}
         {filterError && <p className={styles.errorText}>{filterError}</p>}
-        <CountriesList data={filteredData} groupByTerm={groupByTerm}/>
+        <CountriesList data={filteredData} />
       </main>
     </div>
   );

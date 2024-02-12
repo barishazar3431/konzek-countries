@@ -31,6 +31,7 @@ export default function CountriesList({ data }: Props) {
     <ul className={styles.list}>
       {data?.map((country, index) => (
         <CountriesListItem
+          key={index}
           country={country}
           index={index}
           handleClick={listItemClickHandler}
