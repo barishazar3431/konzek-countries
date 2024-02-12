@@ -66,7 +66,7 @@ function App() {
       return;
     }
 
-    if (group && !(group in data.countries[0])) {
+    if (group && !(group.toLowerCase() in data.countries[0])) {
       setFilterError(
         `The attribute "${group}" is not present in the country object!`
       );
@@ -101,6 +101,7 @@ function App() {
       setFilteredAndGroupedData({ Countries: filtered });
       return;
     }
+    groupBy = groupBy.toLowerCase();
 
     const groupedData = filtered.reduce((acc, country) => {
       if (
