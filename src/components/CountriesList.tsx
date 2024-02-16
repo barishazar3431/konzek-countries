@@ -11,7 +11,7 @@ type Props = {
 
 export default function CountriesList({
   data,
-  initialVisibleCountryCount = 20, //default is 15, you can change it
+  initialVisibleCountryCount = 20, //default is 20, you can change it
 }: Props) {
   const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
