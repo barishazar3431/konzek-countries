@@ -49,11 +49,11 @@ export default function CountriesList({
     setSelectedColorIndex((selectedColorIndex + 1) % colors.length);
   };
 
-  let cumulativeIndex = -1; //index of each country object.
+  let countryIndex = -1; //index of each country object.
 
   const shouldListStop = () => {
     return (
-      !seeAllCountries && cumulativeIndex + 1 >= initialVisibleCountryCount
+      !seeAllCountries && countryIndex + 1 >= initialVisibleCountryCount
     );
   };
 
@@ -74,15 +74,15 @@ export default function CountriesList({
                   if (shouldListStop()) {
                     return;
                   }
-                  cumulativeIndex++;
+                  countryIndex++;
                   return (
                     <CountriesListItem
-                      key={cumulativeIndex}
+                      key={countryIndex}
                       country={country}
-                      index={cumulativeIndex}
+                      index={countryIndex}
                       handleClick={listItemClickHandler}
                       style={
-                        selectedItemIndex === cumulativeIndex
+                        selectedItemIndex === countryIndex
                           ? {
                               background:
                                 colors[selectedColorIndex] || 'darkblue',
