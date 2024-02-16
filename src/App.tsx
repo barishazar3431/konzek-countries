@@ -60,7 +60,7 @@ function App() {
     const { search, group } = parseFilterPrompt(filterPrompt);
     if (!search && !group) {
       setFilterError(
-        'Please use the supported format: E.g search:tu group:continent'
+        'Please use the supported format: E.g "search:tu group:continent"'
       );
       setFilteredAndGroupedData({ 'All Countries': data.countries });
       return;

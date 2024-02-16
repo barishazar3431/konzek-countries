@@ -1,8 +1,12 @@
+.countryGroup {
+  margin-top: 6rem;
+  color: rgb(199, 199, 199);
+}
+
 .listHeader {
   text-align: center;
-  color: rgb(199, 199, 199);
   font-size: 5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .list {
@@ -10,6 +14,23 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
-  color: rgb(199, 199, 199);
   margin-bottom: 3rem;
+}
+
+.showAllBtn {
+  padding: 1rem 2rem;
+  display: block;
+  margin-inline: auto;
+  border-radius: 999rem;
+  background-color: #6b6b6b;
+  border: none;
+  font-size: 1.1rem;
+  color: rgb(199, 199, 199);
+  cursor: pointer;
+  transition: 0.15s background-color;
+  margin-bottom: 2rem;
+}
+
+.showAllBtn:hover {
+  background-color: #525252;
 }

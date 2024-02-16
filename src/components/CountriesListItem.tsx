@@ -19,6 +19,7 @@ export default function CountriesListItem({
 }: Props) {
   return (
     <li
+      key={index}
       data-index={index}
       className={styles.item}
       style={style}

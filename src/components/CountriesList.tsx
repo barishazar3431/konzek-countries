@@ -6,19 +6,25 @@ import { GroupedData } from '../App';
 
 type Props = {
   data: GroupedData | undefined;
+  initialVisibleCountryCount?: number;
 };
 
-export default function CountriesList({ data }: Props) {
+export default function CountriesList({
+  data,
+  initialVisibleCountryCount = 20, //default is 15, you can change it
+}: Props) {
   const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const [seeAllCountries, setSeeAllCountries] = useState(false);
 
   useEffect(() => {
     if (data) {
-      setSelectedItemIndex(
-        calculateGroupedLength(data) < 10 ? calculateGroupedLength(data) - 1 : 9
-      );
+      const countriesLength = calculateGroupedLength(data);
+      setSelectedItemIndex(countriesLength < 10 ? countriesLength - 1 : 9);
+
+      setSeeAllCountries(countriesLength <= initialVisibleCountryCount);
     }
-  }, [data]);
+  }, [data, initialVisibleCountryCount]);
 
   const calculateGroupedLength = (obj: GroupedData) => {
     let length = 0;
@@ -43,23 +49,32 @@ export default function CountriesList({ data }: Props) {
     setSelectedColorIndex((selectedColorIndex + 1) % colors.length);
   };
 
-  let count = 0;
+  let cumulativeIndex = -1; //index of each country object.
+
+  const shouldListStop = () => {
+    return (
+      !seeAllCountries && cumulativeIndex + 1 >= initialVisibleCountryCount
+    );
+  };
 
   return (
     <div>
       {data &&
-        Object.entries(data).map(([key, list]) => {
-          const groupItemCount = list.length;
-          const groupStartIndex = count;
-          count += groupItemCount;
+        Object.entries(data).map(([key, list], index) => {
+          if (shouldListStop()) {
+            return;
+          }
           return (
-            <>
-              <p className={styles.listHeader}>
+            <section className={styles.countryGroup} key={index}>
+              <h2 className={styles.listHeader}>
                 {key} ({list.length} country)
-              </p>
+              </h2>
               <ul className={styles.list}>
-                {list.map((country, index) => {
-                  const cumulativeIndex = groupStartIndex + index;
+                {list.map((country) => {
+                  if (shouldListStop()) {
+                    return;
+                  }
+                  cumulativeIndex++;
                   return (
                     <CountriesListItem
                       key={cumulativeIndex}
@@ -78,9 +93,17 @@ export default function CountriesList({ data }: Props) {
                   );
                 })}
               </ul>
-            </>
+            </section>
           );
         })}
+      {data && !seeAllCountries && (
+        <button
+          className={styles.showAllBtn}
+          onClick={() => setSeeAllCountries(true)}
+        >
+          See All Countries ({calculateGroupedLength(data)}) &darr;
+        </button>
+      )}
     </div>
   );
 }
