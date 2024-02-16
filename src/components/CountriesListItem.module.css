@@ -11,6 +11,7 @@
   border: 1px solid transparent;
   transition: all 0.15s;
   position: relative;
+  animation: fade-in 0.8s;
 }
 
 .item:hover {
@@ -47,4 +48,14 @@
   flex-direction: column;
   gap: 0.5rem;
   text-wrap: wrap;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
