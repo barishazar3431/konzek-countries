@@ -44,17 +44,14 @@ export default function CountriesList({
       setSelectedItemIndex(-1);
     } else {
       setSelectedItemIndex(newSelectedIndex);
+      setSelectedColorIndex((selectedColorIndex + 1) % colors.length);
     }
-
-    setSelectedColorIndex((selectedColorIndex + 1) % colors.length);
   };
 
   let countryIndex = -1; //index of each country object.
 
   const shouldListStop = () => {
-    return (
-      !seeAllCountries && countryIndex + 1 >= initialVisibleCountryCount
-    );
+    return !seeAllCountries && countryIndex + 1 >= initialVisibleCountryCount;
   };
 
   return (
