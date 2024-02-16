@@ -77,7 +77,18 @@ function App() {
   };
 
   const filterAndGroupCountries = (searchTerm: string, groupBy: string) => {
-    const filtered = data?.countries.filter(
+    searchTerm = searchTerm.replace('_', ' '); //change underscore to space
+    const filteredCountries = filterCountries(searchTerm);
+
+    if (!filteredCountries) return;
+
+    groupCountries(filteredCountries, groupBy);
+  };
+
+  const filterCountries = (searchTerm: string) => {
+    if (!data) return;
+
+    return data.countries.filter(
       (country) =>
         country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         country.continent.name
@@ -91,19 +102,16 @@ function App() {
         (country.currency &&
           country.currency.toLowerCase().includes(searchTerm.toLowerCase()))
     );
-    if (!filtered) return;
-
-    groupCountries(filtered, groupBy);
   };
 
-  const groupCountries = (filtered: Country[], groupBy: string) => {
-    if (!groupBy) {
-      setFilteredAndGroupedData({ Countries: filtered });
+  const groupCountries = (filteredCountries: Country[], groupBy: string) => {
+    if (!groupBy || filteredCountries.length === 0) {
+      setFilteredAndGroupedData({ Countries: filteredCountries });
       return;
     }
     groupBy = groupBy.toLowerCase();
 
-    const groupedData = filtered.reduce((acc, country) => {
+    const groupedData = filteredCountries.reduce((acc, country) => {
       if (
         typeof country[groupBy as keyof Country] === 'string' ||
         groupBy === 'currency'
@@ -131,7 +139,7 @@ function App() {
   };
 
   const parseFilterPrompt = (prompt: string) => {
-    const regex = /(search|group)+:(\w+)/gi;
+    const regex = /(search|group)+:([^ ]+)/gi;
 
     let match;
     const result = {
