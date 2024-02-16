@@ -1,4 +1,4 @@
-import styles from './CountriesFilter.module.css';
+import styles from './CountriesFilterForm.module.css';
 
 type Props = {
   handleFilter: (e: string) => void;
@@ -6,7 +6,7 @@ type Props = {
 
 import { SyntheticEvent, useRef } from 'react';
 
-export default function CountriesFilter({ handleFilter }: Props) {
+export default function CountriesFilterForm({ handleFilter }: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleSubmit = (event: SyntheticEvent) => {

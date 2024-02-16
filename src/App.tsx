@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { gql } from './__generated__';
 import CountriesList from './components/CountriesList';
 import { useEffect, useState } from 'react';
-import CountriesFilter from './components/CountriesFilter';
+import CountriesFilterForm from './components/CountriesFilterForm';
 import { GetCountriesQuery } from './__generated__/graphql';
 import styles from './App.module.css';
 
@@ -161,7 +161,7 @@ function App() {
 
   return (
     <div className="container">
-      <CountriesFilter handleFilter={handleFilter} />
+      <CountriesFilterForm handleFilter={handleFilter} />
       <main className={styles.mainContainer}>
         {loading && <p className={styles.loadingText}>Loading...</p>}
         {apolloError && (
