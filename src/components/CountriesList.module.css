@@ -27,10 +27,12 @@
   font-size: 1.1rem;
   color: rgb(199, 199, 199);
   cursor: pointer;
-  transition: 0.15s background-color;
+  border: 1px solid transparent;
+  transition: 0.15s all;
   margin-bottom: 2rem;
 }
 
 .showAllBtn:hover {
   background-color: #525252;
+  border: 1px solid white;
 }

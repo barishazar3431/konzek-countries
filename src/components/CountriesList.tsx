@@ -11,28 +11,28 @@ type Props = {
 
 export default function CountriesList({
   data,
-  initialVisibleCountryCount = 20, //default is 20, you can change it
+  initialVisibleCountryCount = 15, //default is 15, you can change it
 }: Props) {
   const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [seeAllCountries, setSeeAllCountries] = useState(false);
 
+  const countriesLength = calculateDataLength();
+
   useEffect(() => {
-    if (data) {
-      const countriesLength = calculateGroupedLength(data);
-      setSelectedItemIndex(countriesLength < 10 ? countriesLength - 1 : 9);
+    setSelectedItemIndex(countriesLength < 10 ? countriesLength - 1 : 9);
+    setSeeAllCountries(false);
+  }, [countriesLength, data]);
 
-      setSeeAllCountries(countriesLength <= initialVisibleCountryCount);
-    }
-  }, [data, initialVisibleCountryCount]);
+  function calculateDataLength() {
+    if (!data) return 0;
 
-  const calculateGroupedLength = (obj: GroupedData) => {
     let length = 0;
-    for (const key in obj) {
-      length += obj[key].length;
+    for (const key in data) {
+      length += data[key].length;
     }
     return length;
-  };
+  }
 
   const listItemClickHandler = (event: SyntheticEvent) => {
     const newSelectedIndex = Number(
@@ -93,12 +93,18 @@ export default function CountriesList({
             </section>
           );
         })}
-      {data && !seeAllCountries && (
+      {countriesLength > initialVisibleCountryCount && (
         <button
           className={styles.showAllBtn}
-          onClick={() => setSeeAllCountries(true)}
+          onClick={() => setSeeAllCountries((prevState) => !prevState)}
         >
-          See All Countries ({calculateGroupedLength(data)}) &darr;
+          {seeAllCountries ? (
+            <span>
+              Show Fewer Countries ({initialVisibleCountryCount}) &uarr;
+            </span>
+          ) : (
+            <span>Show All Countries ({countriesLength}) &darr;</span>
+          )}
         </button>
       )}
     </div>
