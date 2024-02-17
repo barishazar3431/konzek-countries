@@ -22,6 +22,7 @@ export default function CountriesList({
   useEffect(() => {
     setSelectedItemIndex(countriesLength < 10 ? countriesLength - 1 : 9);
     setSeeAllCountries(false);
+    setSelectedColorIndex(0);
   }, [countriesLength, data]);
 
   function calculateDataLength() {
