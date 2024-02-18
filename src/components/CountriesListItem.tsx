@@ -1,4 +1,4 @@
-import { CSSProperties, SyntheticEvent } from 'react';
+import { CSSProperties } from 'react';
 import { GetCountriesQuery } from '../__generated__/graphql';
 import styles from './CountriesListItem.module.css';
 
@@ -7,7 +7,7 @@ type Country = GetCountriesQuery['countries'][number];
 type Props = {
   country: Country;
   index: number;
-  handleClick?: (e: SyntheticEvent) => void;
+  handleClick: (index: number) => void;
   style?: CSSProperties;
 };
 
@@ -19,11 +19,9 @@ export default function CountriesListItem({
 }: Props) {
   return (
     <li
-      key={index}
-      data-index={index}
       className={styles.item}
       style={style}
-      onClick={handleClick}
+      onClick={() => handleClick(index)}
     >
       <span className={styles.itemCounter}>{index + 1}</span>
       <span className={styles.flag}>{country.emoji}</span>

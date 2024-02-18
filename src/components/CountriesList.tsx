@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './CountriesList.module.css';
 import colors from '../utils/colors';
 import CountriesListItem from './CountriesListItem';
@@ -35,16 +35,11 @@ export default function CountriesList({
     return length;
   }
 
-  const listItemClickHandler = (event: SyntheticEvent) => {
-    const newSelectedIndex = Number(
-      event.currentTarget.getAttribute('data-index')
-    );
-    if (newSelectedIndex === undefined) return;
-
-    if (newSelectedIndex === selectedItemIndex) {
+  const listItemClickHandler = (index: number) => {
+    if (index === selectedItemIndex) {
       setSelectedItemIndex(-1);
     } else {
-      setSelectedItemIndex(newSelectedIndex);
+      setSelectedItemIndex(index);
       setSelectedColorIndex((selectedColorIndex + 1) % colors.length);
     }
   };
